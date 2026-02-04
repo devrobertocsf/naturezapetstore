@@ -110,13 +110,15 @@ function endGame(scene) {
 }
 
 // ======================
-// MENU (APENAS PLAY)
+// MENU (TELA INICIAL)
 // ======================
 class MenuScene extends Phaser.Scene {
-    constructor() { super('MenuScene'); }
+    constructor() {
+        super('MenuScene');
+    }
 
     preload() {
-        this.load.image('menu', 'ui/menu_underline_bg.png');
+        this.load.image('menu', 'ui/telainicial.png');
     }
 
     create() {
@@ -125,7 +127,11 @@ class MenuScene extends Phaser.Scene {
         const bg = this.add.image(0, 0, 'menu').setOrigin(0);
         bg.setScale(Math.max(width / bg.width, height / bg.height));
 
-        this.add.zone(width / 2, height * 0.7, 220, 80)
+        // BOTÃO PLAY (invisível)
+        const playX = width / 2;
+        const playY = height * 0.9;
+
+        this.add.zone(playX, playY, 125, 78)
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
                 this.scene.start('SelectPetScene');
@@ -137,7 +143,9 @@ class MenuScene extends Phaser.Scene {
 // SELEÇÃO DE PET
 // ======================
 class SelectPetScene extends Phaser.Scene {
-    constructor() { super('SelectPetScene'); }
+    constructor() {
+        super('SelectPetScene');
+    }
 
     preload() {
         this.load.image('selectBG', 'gato_dog.png');
@@ -171,7 +179,9 @@ class SelectPetScene extends Phaser.Scene {
 // GAME
 // ======================
 class GameScene extends Phaser.Scene {
-    constructor() { super('GameScene'); }
+    constructor() {
+        super('GameScene');
+    }
 
     preload() {
         this.load.image('fundo', 'fundo01.png');
@@ -185,7 +195,6 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        // RESET
         gameOver = false;
         score = 0;
         angle = 0;
@@ -195,7 +204,6 @@ class GameScene extends Phaser.Scene {
         centerX = this.cameras.main.centerX;
         centerY = this.cameras.main.centerY;
 
-        // FUNDO FULLSCREEN
         const { width, height } = this.scale;
 
         background = this.add.image(0, 0, 'fundo')
@@ -203,34 +211,25 @@ class GameScene extends Phaser.Scene {
             .setDepth(-10);
 
         background.setScale(
-            Math.max(
-                width / background.width,
-                height / background.height
-            )
+            Math.max(width / background.width, height / background.height)
         );
 
-        // ÁUDIO
         bgm = this.sound.add('bgm', { loop: true, volume: 0.6 });
         bgm.play();
         loseSound = this.sound.add('lose');
 
-        // TRONCO
         this.add.image(centerX, centerY, 'tronco').setScale(0.29);
 
-        // PLAYER
         const pet = PET_CONFIG[selectedPet];
         player = this.add.image(centerX + radius, centerY, pet.key)
             .setScale(pet.scale);
 
-        // UI
         scoreText = this.add.text(24, 24, 'Pontos: 0', uiTextStyle);
 
-        // CONTROLE
         this.input.on('pointerdown', () => {
             if (!gameOver) direction *= -1;
         });
 
-        // SPAWN
         spawnTimer = this.time.addEvent({
             delay: spawnDelay,
             loop: true,
