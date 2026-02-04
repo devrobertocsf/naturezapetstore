@@ -1,0 +1,26 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tela cheia e fundo */
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #020617;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+/* Container do jogo */
+#game-container {
+    width: 100%;
+    height: 100%;
+}
+
+/* Canvas do Phaser */
+canvas {
+    image-rendering: auto;
+}
