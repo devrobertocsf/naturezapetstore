@@ -31,7 +31,7 @@ const PET_CONFIG = {
 };
 
 // ======================
-// ESTILOS
+// ESTILO TEXTO
 // ======================
 const uiTextStyle = {
     fontFamily: 'Arial Black',
@@ -39,24 +39,6 @@ const uiTextStyle = {
     color: '#ffffff',
     stroke: '#000000',
     strokeThickness: 4
-};
-
-const gameOverTitleStyle = {
-    fontFamily: 'Arial Black',
-    fontSize: '64px',
-    color: '#ef4444',
-    stroke: '#000000',
-    strokeThickness: 6
-};
-
-const buttonStyle = {
-    fontFamily: 'Arial Black',
-    fontSize: '22px',
-    color: '#22c55e',
-    backgroundColor: '#ffffff',
-    padding: { x: 22, y: 12 },
-    stroke: '#000000',
-    strokeThickness: 3
 };
 
 // ======================
@@ -81,7 +63,7 @@ function spawnEnemy(scene) {
 }
 
 // ======================
-// GAME OVER
+// GAME OVER (CHAMADA)
 // ======================
 function endGame(scene) {
     if (gameOver) return;
@@ -93,24 +75,15 @@ function endGame(scene) {
     enemies.forEach(e => e.destroy());
     enemies = [];
 
-    scene.add.text(centerX, centerY + 170, 'PERDEU', gameOverTitleStyle)
-        .setOrigin(0.5);
-
-    scene.add.text(
-        centerX,
-        centerY + 255,
-        'JOGAR NOVAMENTE',
-        buttonStyle
-    )
-    .setOrigin(0.5)
-    .setInteractive({ useHandCursor: true })
-    .on('pointerdown', () => {
-        scene.scene.restart();
+    scene.time.delayedCall(300, () => {
+        scene.scene.start('GameOverScene', {
+            score: Math.floor(score)
+        });
     });
 }
 
 // ======================
-// MENU (TELA INICIAL)
+// MENU
 // ======================
 class MenuScene extends Phaser.Scene {
     constructor() {
@@ -127,11 +100,16 @@ class MenuScene extends Phaser.Scene {
         const bg = this.add.image(0, 0, 'menu').setOrigin(0);
         bg.setScale(Math.max(width / bg.width, height / bg.height));
 
-        // BOTÃO PLAY (invisível)
         const playX = width / 2;
-        const playY = height * 0.9;
+        const playY = height * 0.85;
+        const playW = 160;
+        const playH = 50;
 
-        this.add.zone(playX, playY, 125, 78)
+        // DEBUG
+        // this.add.rectangle(playX, playY, playW, playH)
+        //     .setStrokeStyle(2, 0x00ff00);
+
+        this.add.zone(playX, playY, playW, playH)
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
                 this.scene.start('SelectPetScene');
@@ -157,16 +135,34 @@ class SelectPetScene extends Phaser.Scene {
         const bg = this.add.image(0, 0, 'selectBG').setOrigin(0);
         bg.setScale(Math.max(width / bg.width, height / bg.height));
 
-        // CACHORRO
-        this.add.zone(width * 0.25, height * 0.5, 150, 195)
+        // DOG
+        const dogX = width * 0.25;
+        const dogY = height * 0.78;
+        const dogW = 130;
+        const dogH = 210;
+
+        // DEBUG
+        // this.add.rectangle(dogX, dogY, dogW, dogH)
+        //     .setStrokeStyle(2, 0x00ff00);
+
+        this.add.zone(dogX, dogY, dogW, dogH)
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
                 selectedPet = 'dog';
                 this.scene.start('GameScene');
             });
 
-        // GATO
-        this.add.zone(width * 0.75, height * 0.5, 150, 195)
+        // CAT
+        const catX = width * 0.75;
+        const catY = height * 0.80;
+        const catW = 140;
+        const catH = 180;
+
+        // DEBUG
+        // this.add.rectangle(catX, catY, catW, catH)
+        //     .setStrokeStyle(2, 0x00ff00);
+
+        this.add.zone(catX, catY, catW, catH)
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
                 selectedPet = 'gato';
@@ -269,6 +265,66 @@ class GameScene extends Phaser.Scene {
 }
 
 // ======================
+// GAME OVER SCENE
+// ======================
+class GameOverScene extends Phaser.Scene {
+    constructor() {
+        super('GameOverScene');
+    }
+
+    preload() {
+        this.load.image('gameover', 'ui/gamerover.jpg');
+        this.load.image('btnJogar', 'ui/jogar.png');
+        this.load.image('btnCompartilhar', 'ui/compartilhar.png');
+    }
+
+    create(data) {
+        const { width, height } = this.scale;
+
+        const bg = this.add.image(0, 0, 'gameover').setOrigin(0);
+        bg.setScale(Math.max(width / bg.width, height / bg.height));
+
+        // JOGAR
+        const retryX = width / 2;
+        const retryY = height * 0.50;
+        const retryW = 170;
+        const retryH = 70;
+
+        this.add.image(retryX, retryY, 'btnJogar').setScale(0.4);
+
+        // DEBUG
+        // this.add.rectangle(retryX, retryY, retryW, retryH)
+        //     .setStrokeStyle(2, 0x00ff00);
+
+        this.add.zone(retryX, retryY, retryW, retryH)
+            .setInteractive({ useHandCursor: true })
+            .on('pointerdown', () => {
+                this.scene.start('GameScene');
+            });
+
+        // COMPARTILHAR
+        const shareX = width / 2;
+        const shareY = height * 0.65;
+        const shareW = 170;
+        const shareH = 70;
+
+        this.add.image(shareX, shareY, 'btnCompartilhar').setScale(0.2);
+
+        // DEBUG
+        // this.add.rectangle(shareX, shareY, shareW, shareH)
+        //     .setStrokeStyle(2, 0x0000ff);
+
+        this.add.zone(shareX, shareY, shareW, shareH)
+            .setInteractive({ useHandCursor: true })
+            .on('pointerdown', () => {
+                const msg = `Joguei no Natureza PetStore e fiz ${data.score} pontos! 🐾`;
+                const url = `https://wa.me/5583987542951?text=${encodeURIComponent(msg)}`;
+                window.open(url, '_blank');
+            });
+    }
+}
+
+// ======================
 // CONFIGURAÇÃO DO JOGO
 // ======================
 new Phaser.Game({
@@ -276,7 +332,6 @@ new Phaser.Game({
     parent: 'game-container',
     width: 360,
     height: 640,
-    backgroundColor: '#020617',
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
@@ -284,6 +339,7 @@ new Phaser.Game({
     scene: [
         MenuScene,
         SelectPetScene,
-        GameScene
+        GameScene,
+        GameOverScene
     ]
 });
