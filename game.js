@@ -148,7 +148,7 @@ class SelectPetScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('selectBG', 'escolhaseupet.png');
+        this.load.image('selectBG', 'escolhaseupet1.png');
     }
 
     create() {
