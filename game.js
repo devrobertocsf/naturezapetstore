@@ -148,7 +148,7 @@ class SelectPetScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('selectBG', 'gato_dog.png');
+        this.load.image('selectBG', 'escolhaseupet.png');
     }
 
     create() {
@@ -188,8 +188,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('tronco', 'tronco.png');
         this.load.image('pulga', 'pulga.png');
         this.load.image('carrapato', 'carrapato.png');
-        this.load.image('dog', 'dog.png');
-        this.load.image('gato', 'gato.png');
+        this.load.image('dog', 'dog12.png');
+        this.load.image('gato', 'gato12.png');
         this.load.audio('bgm', 'bgm.mp3');
         this.load.audio('lose', 'lose.wav');
     }
